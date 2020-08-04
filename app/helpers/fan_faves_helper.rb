@@ -1,0 +1,2 @@
+module FanFavesHelper
+end

@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @character.name %>
+</p>
+
+<p>
+  <strong>Originating work:</strong>
+  <%= @character.originating_work %>
+</p>
+
+<p>
+  <strong>Fave this Character</strong>
+  <%= form_for @fan_fave do |f| %>
+    <p>Why are you faving <%= @character.name %>?</p>
+    <%= f.text_area :content %>
+    <%= f.hidden_field :character_id, value: @character.id %>
+    <%= f.submit %>
+  <% end %>
+</p>
+
+<%= link_to 'Edit', edit_character_path(@character) %> |
+<%= link_to 'Back', characters_path %>

@@ -10,13 +10,22 @@ class SessionsController < ApplicationController
 
   # Login and redireect
   def create
-    user = User.find_by(username: params[:username])
-    if user && user.authenticate(params[:password])
+    if omniauth = request.env['omniauth.auth']
+      user = User.find_by(email: omniauth['info']['email'])
+      unless user
+        user = User.create(email: omniauth['info']['email'], username: omniauth['info']['email'], password: SecureRandom.hex)
+      end
       session[:user_id] = user.id
       redirect_to posts_path
     else
-      flash[:errors] = ["Incorrect Username or Password"]
-      redirect_to login_path
+      user = User.find_by(username: params[:username])
+      if user && user.authenticate(params[:password])
+        session[:user_id] = user.id
+        redirect_to posts_path
+      else
+        flash[:errors] = ["Incorrect Username or Password"]
+        redirect_to login_path
+      end
     end
   end
 

@@ -1,3 +1,18 @@
 // Place all the styles related to the Posts controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.card {
+  width: 28%;
+  padding: .25em;
+  margin: 1em .5em;
+  border-radius: 1em;
+
+  border: solid yellow 2px;
+
+}

@@ -1,29 +1,19 @@
 <p id="notice"><%= notice %></p>
 
-<h3>Welcome <%= @current_user.username %>!</h3>
+<h1>Welcome to TheDenied.com, <%= @current_user.username %>!</h1>
 
-<h1>Posts</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Content</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @posts.each do |post| %>
-      <tr>
-        <td><%= post.content %></td>
-        <td><%= link_to 'Show', post %></td>
-        <td><%= link_to 'Edit', edit_post_path(post) %></td>
-        <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+<div class="cards">
+<% @posts.each do |post|%>
+  <div class="card">
+    <p><%= post.content %></p>
+    <%= form_for @like do |f| %>
+      <%=f.hidden_field :post_id, value: post.id %>
+      <%=f.submit "👍  #{post.like_count}"%>
     <% end %>
-  </tbody>
-</table>
+  </div>
 
-<br>
+<% end %>
+</div>
+
 
 <%= link_to 'New Post', new_post_path %>

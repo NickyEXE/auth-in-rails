@@ -11,9 +11,9 @@ class SessionsController < ApplicationController
   # Login and redireect
   def create
     if omniauth = request.env['omniauth.auth']
-      user = User.find_by(email: omniauth['info']['email'])
-      unless user
-        user = User.create(email: omniauth['info']['email'], username: omniauth['info']['email'], password: SecureRandom.hex)
+      user = User.find_or_create_by(email: omniauth['info']['email']) do |u|
+        u.username = omniauth['info']['email']
+        u.password = SecureRandom.hex
       end
       session[:user_id] = user.id
       redirect_to posts_path

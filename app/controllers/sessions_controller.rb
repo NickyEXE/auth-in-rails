@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_action :authorized, only: [:new, :create]
+  skip_before_action :authorized, only: [:new, :create, :google_omniauth_create]
 
   # Render a login form
   def new
@@ -8,24 +8,25 @@ class SessionsController < ApplicationController
     end
   end
 
-  # Login and redireect
-  def create
-    if omniauth = request.env['omniauth.auth']
+  def google_omniauth_create
+    omniauth = request.env['omniauth.auth']
       user = User.find_or_create_by(email: omniauth['info']['email']) do |u|
         u.username = omniauth['info']['email']
         u.password = SecureRandom.hex
       end
+    session[:user_id] = user.id
+    redirect_to posts_path
+  end
+
+  # Login and redireect
+  def create
+    user = User.find_by(username: params[:username])
+    if user && user.authenticate(params[:password])
       session[:user_id] = user.id
       redirect_to posts_path
     else
-      user = User.find_by(username: params[:username])
-      if user && user.authenticate(params[:password])
-        session[:user_id] = user.id
-        redirect_to posts_path
-      else
-        flash[:errors] = ["Incorrect Username or Password"]
-        redirect_to login_path
-      end
+      flash[:errors] = ["Incorrect Username or Password"]
+      redirect_to login_path
     end
   end
 
